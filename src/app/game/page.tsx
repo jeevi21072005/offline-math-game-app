@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type DifficultyLevel = "easy" | "hard" | "difficult";
@@ -11,7 +11,7 @@ type QuestionType = {
   options: number[];
 };
 
-export default function GamePage() {
+function GameContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const levelParam = searchParams.get("level") as DifficultyLevel | null;
@@ -254,5 +254,17 @@ export default function GamePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function GamePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-2xl font-bold text-gray-700">Loading game...</div>
+      </div>
+    }>
+      <GameContent />
+    </Suspense>
   );
 }
